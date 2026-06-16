@@ -27,11 +27,21 @@ markdown, code block). Tự host, tự cắm LLM provider của bạn — **khô
 
 ## 🖼️ Ảnh chụp
 
-<!-- Thêm ảnh vào docs/ rồi nhúng tại đây, ví dụ:
-![Chat AI](docs/chat.png)
-![Models](docs/models.png)
-![Local Agent](docs/agent.png)
--->
+**Chat AI — hỏi tiếng Việt, AI tự gọi tool lấy dữ liệu thật**
+
+![Chat AI](docs/chat.jpg)
+
+**Quản lý nhiều server (CPU/RAM/Disk realtime) + trợ lý AI cho từng server**
+
+![Danh sách server](docs/servers.jpg)
+
+**Tổng quan tài nguyên từng server**
+
+![Tổng quan server](docs/overview.jpg)
+
+**Giám sát & cảnh báo khi dịch vụ down**
+
+![Cảnh báo](docs/alerts.jpg)
 
 ## 🏗️ Kiến trúc (docker compose)
 
