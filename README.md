@@ -157,7 +157,7 @@ docker-compose.yml
 
 ## 📄 License
 
-Chưa gắn license — khuyến nghị thêm **MIT** hoặc **Apache-2.0** trước khi mời cộng đồng đóng góp.
+[MIT](LICENSE) © 2026 sonlh26 — tự do dùng, sửa, phân phối.
 
 ---
 
