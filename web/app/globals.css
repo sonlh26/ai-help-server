@@ -1,0 +1,330 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Theme: dark, aaPanel-like. Near-black surfaces, green accent (#21d07a).
+   Tailwind v4 uses @theme to expose tokens as utilities (bg-bg, text-fg, ...).
+--------------------------------------------------------------------------- */
+@theme {
+  --color-bg: #0a0d0c;
+  --color-surface: #11161410;
+  --color-panel: #131917;
+  --color-panel-2: #182120;
+  --color-border: #243029;
+  --color-border-soft: #1b2421;
+
+  --color-fg: #e7efe9;
+  --color-muted: #8aa098;
+  --color-faint: #5d7068;
+
+  --color-accent: #21d07a;
+  --color-accent-strong: #19b86b;
+  --color-accent-soft: #0f2a1f;
+
+  --color-danger: #f5544c;
+  --color-danger-soft: #2a1413;
+  --color-warn: #f0b429;
+  --color-warn-soft: #2a2110;
+  --color-ok: #21d07a;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code",
+    Menlo, Consolas, monospace;
+
+  --radius-card: 14px;
+}
+
+/* Fonts: Vietnamese-supporting Google Fonts (Inter + JetBrains Mono). */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap&subset=latin,latin-ext,vietnamese");
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html,
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  /* subtle radial glow top-left for depth */
+  background-image:
+    radial-gradient(900px 500px at 12% -8%, rgba(33, 208, 122, 0.06), transparent 60%),
+    radial-gradient(700px 400px at 100% 0%, rgba(33, 208, 122, 0.035), transparent 55%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #233029;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2f3f37;
+  background-clip: padding-box;
+}
+
+/* Reusable component utilities --------------------------------------------- */
+@layer components {
+  .card {
+    background-color: var(--color-panel);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+  }
+
+  .input {
+    width: 100%;
+    background-color: #0e1412;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 0.6rem 0.8rem;
+    color: var(--color-fg);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .input::placeholder {
+    color: var(--color-faint);
+  }
+  .input:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(33, 208, 122, 0.16);
+  }
+
+  .label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--color-muted);
+    margin-bottom: 0.35rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border-radius: 10px;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.12s ease, background-color 0.15s ease,
+      border-color 0.15s ease, opacity 0.15s ease;
+    border: 1px solid transparent;
+    user-select: none;
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background-color: var(--color-accent);
+    color: #07140d;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--color-accent-strong);
+  }
+  .btn-ghost {
+    background-color: transparent;
+    border-color: var(--color-border);
+    color: var(--color-fg);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background-color: var(--color-panel-2);
+    border-color: #2f3f37;
+  }
+  .btn-danger {
+    background-color: transparent;
+    border-color: #46211f;
+    color: var(--color-danger);
+  }
+  .btn-danger:hover:not(:disabled) {
+    background-color: var(--color-danger-soft);
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    color: var(--color-muted);
+    background-color: #0e1412;
+    white-space: nowrap;
+  }
+  .pill-on {
+    color: var(--color-accent);
+    border-color: rgba(33, 208, 122, 0.4);
+    background-color: var(--color-accent-soft);
+  }
+  .pill-off {
+    color: var(--color-faint);
+  }
+  .pill-down {
+    color: var(--color-danger);
+    border-color: #46211f;
+    background-color: var(--color-danger-soft);
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: currentColor;
+    flex: none;
+  }
+}
+
+/* Markdown rendering for AI chat answers (react-markdown + KaTeX) ----------- */
+@layer components {
+  .md-body {
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: var(--color-fg);
+    word-break: break-word;
+  }
+  .md-body > :first-child { margin-top: 0; }
+  .md-body > :last-child { margin-bottom: 0; }
+  .md-body p { margin: 0.5rem 0; }
+  .md-body h1,
+  .md-body h2,
+  .md-body h3,
+  .md-body h4 { font-weight: 600; line-height: 1.3; margin: 1rem 0 0.5rem; }
+  .md-body h1 { font-size: 1.2rem; }
+  .md-body h2 { font-size: 1.05rem; }
+  .md-body h3 { font-size: 0.95rem; }
+  .md-body ul,
+  .md-body ol { margin: 0.5rem 0; padding-left: 1.4rem; }
+  .md-body ul { list-style: disc; }
+  .md-body ol { list-style: decimal; }
+  .md-body li { margin: 0.2rem 0; }
+  .md-body li > ul,
+  .md-body li > ol { margin: 0.2rem 0; }
+  .md-body a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 2px; }
+  .md-body strong { font-weight: 600; color: var(--color-fg); }
+  .md-body em { font-style: italic; }
+  .md-body blockquote {
+    border-left: 3px solid var(--color-border);
+    padding-left: 0.8rem;
+    margin: 0.6rem 0;
+    color: var(--color-muted);
+  }
+  .md-body hr { border: 0; border-top: 1px solid var(--color-border); margin: 0.9rem 0; }
+
+  /* Inline code (anything not inside a <pre>). */
+  .md-body :not(pre) > code {
+    font-family: var(--font-mono);
+    font-size: 0.82em;
+    background: #0e1412;
+    border: 1px solid var(--color-border-soft);
+    border-radius: 5px;
+    padding: 0.08rem 0.34rem;
+    color: var(--color-accent);
+    white-space: break-spaces;
+  }
+
+  /* Fenced code block. */
+  .md-body pre {
+    background: #0b0f0e;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    overflow-x: auto;
+    margin: 0.7rem 0;
+  }
+  .md-body pre code {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: var(--color-fg);
+    background: none;
+    border: 0;
+    padding: 0;
+    white-space: pre;
+  }
+
+  /* GFM tables. */
+  .md-body table {
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    border-collapse: collapse;
+    overflow-x: auto;
+    margin: 0.7rem 0;
+    font-size: 0.82rem;
+  }
+  .md-body th,
+  .md-body td { border: 1px solid var(--color-border); padding: 0.4rem 0.65rem; text-align: left; }
+  .md-body th { background: var(--color-panel-2); font-weight: 600; }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-up {
+  animation: fadeUp 0.32s ease both;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.pulse {
+  animation: pulseDot 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

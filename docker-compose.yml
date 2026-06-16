@@ -1,0 +1,60 @@
+# Hybrid stack: web (Next.js) + api (FastAPI) + db (Postgres) + worker (monitoring).
+# Deploy self-hosted: `docker compose up -d`. web is the only public-facing service.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # Không expose ra ngoài; chỉ mạng nội bộ compose.
+
+  api:
+    build: ./api
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+    # Không expose port ra host; web gọi qua mạng nội bộ (http://api:8000).
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  worker:
+    build: ./api
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+    # Chạy vòng lặp giám sát (always-on, dùng APP_MASTER_KEY giải mã creds).
+    command: ["python", "-m", "app.worker"]
+
+  web:
+    build: ./web
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - api
+      - db
+    ports:
+      - "3001:3000"
+
+  # Agent gateway: bridges the API to on-server agents (long-poll). Public-facing so
+  # agents can dial out to it; the API dispatches jobs via the internal network.
+  gateway:
+    build: ./gateway
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "8090:8090"
+
+volumes:
+  pgdata:

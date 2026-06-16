@@ -1,0 +1,31 @@
+# Python (api)
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Node (web)
+node_modules/
+.next/
+next-env.d.ts
+
+# Env & secrets (keep .env.example as the template)
+.env
+.env.local
+.env.*.local
+config.json
+
+# Local tooling / planning (not for the public repo)
+.claude/
+plans/
+venv/
+
+# Build artifacts
+*.tsbuildinfo
+*.log
+# Compiled Go agent binaries
+agent/aapanel-ai-agent
+agent/aapanel-ai-agent-*
+
+# OS
+.DS_Store
