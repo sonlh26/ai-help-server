@@ -29,3 +29,6 @@ agent/aapanel-ai-agent-*
 
 # OS
 .DS_Store
+
+# Deploy script (chứa secret)
+deploy.sh

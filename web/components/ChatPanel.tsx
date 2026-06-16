@@ -50,16 +50,16 @@ function ToolCard({
         ? "text-[var(--color-warn)]"
         : "text-[var(--color-muted)]";
   return (
-    <div className="rounded-lg border border-[var(--color-border-soft)] bg-[#0e1412] text-xs">
+    <div className="min-w-0 max-w-full overflow-hidden rounded-lg border border-[var(--color-border-soft)] bg-[#0e1412] text-xs">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center gap-2 px-3 py-2 text-left"
+        className="flex w-full min-w-0 items-center gap-2 px-3 py-2 text-left"
       >
-        <span className={`font-semibold ${color}`}>{title}</span>
-        <span className="ml-auto text-[var(--color-faint)]">{open ? "▾" : "▸"}</span>
+        <span className={`min-w-0 truncate font-semibold ${color}`}>{title}</span>
+        <span className="ml-auto flex-none text-[var(--color-faint)]">{open ? "▾" : "▸"}</span>
       </button>
       {open && (
-        <pre className="overflow-x-auto border-t border-[var(--color-border-soft)] px-3 py-2 font-[family-name:var(--font-mono)] text-[11px] leading-relaxed text-[var(--color-muted)] whitespace-pre-wrap break-words">
+        <pre className="max-w-full overflow-x-auto border-t border-[var(--color-border-soft)] px-3 py-2 font-[family-name:var(--font-mono)] text-[11px] leading-relaxed text-[var(--color-muted)] whitespace-pre-wrap break-words">
           {body}
         </pre>
       )}
@@ -142,14 +142,14 @@ function ConfirmCard({
         {command !== undefined ? (
           <div>
             <div className="mb-1 text-xs font-medium text-[var(--color-faint)]">{label}</div>
-            <pre className="overflow-x-auto rounded-lg border border-[var(--color-border-soft)] bg-[#0e1412] px-3 py-2 font-[family-name:var(--font-mono)] text-[12px] leading-relaxed text-[var(--color-muted)] whitespace-pre-wrap break-words">
+            <pre className="max-w-full overflow-x-auto rounded-lg border border-[var(--color-border-soft)] bg-[#0e1412] px-3 py-2 font-[family-name:var(--font-mono)] text-[12px] leading-relaxed text-[var(--color-muted)] whitespace-pre-wrap break-words">
               {command}
             </pre>
           </div>
         ) : fallbackJson !== undefined ? (
           <div>
             <div className="mb-1 text-xs font-medium text-[var(--color-faint)]">{label}</div>
-            <pre className="overflow-x-auto rounded-lg border border-[var(--color-border-soft)] bg-[#0e1412] px-3 py-2 font-[family-name:var(--font-mono)] text-[12px] leading-relaxed text-[var(--color-muted)] whitespace-pre-wrap break-words">
+            <pre className="max-w-full overflow-x-auto rounded-lg border border-[var(--color-border-soft)] bg-[#0e1412] px-3 py-2 font-[family-name:var(--font-mono)] text-[12px] leading-relaxed text-[var(--color-muted)] whitespace-pre-wrap break-words">
               {fallbackJson}
             </pre>
           </div>
@@ -210,11 +210,11 @@ function AssistantBubble({
   onCancel: (partIndex: number) => void;
 }) {
   return (
-    <div className="space-y-2">
+    <div className="min-w-0 space-y-2">
       {parts.map((p, i) => {
         if (p.kind === "text")
           return (
-            <div key={i} className="whitespace-pre-wrap leading-relaxed text-sm">
+            <div key={i} className="min-w-0 whitespace-pre-wrap break-words leading-relaxed text-sm">
               {p.text}
             </div>
           );
@@ -496,7 +496,7 @@ export default function ChatPanel({ serverId }: { serverId: string }) {
       {/* Messages */}
       <div
         ref={scrollRef}
-        className="flex-1 space-y-4 overflow-y-auto rounded-xl border border-[var(--color-border)] bg-[#0c100f] p-4"
+        className="min-h-0 flex-1 space-y-4 overflow-y-auto overflow-x-hidden rounded-xl border border-[var(--color-border)] bg-[#0c100f] p-4"
       >
         {messages.length === 0 && (
           <div className="flex h-full items-center justify-center text-center text-sm text-[var(--color-faint)]">
@@ -506,13 +506,13 @@ export default function ChatPanel({ serverId }: { serverId: string }) {
         {messages.map((m, i) =>
           m.role === "user" ? (
             <div key={i} className="flex justify-end">
-              <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-[var(--color-accent-soft)] border border-[rgba(33,208,122,0.25)] px-3.5 py-2 text-sm leading-relaxed">
+              <div className="max-w-[85%] min-w-0 whitespace-pre-wrap break-words rounded-2xl rounded-br-sm bg-[var(--color-accent-soft)] border border-[rgba(33,208,122,0.25)] px-3.5 py-2 text-sm leading-relaxed">
                 {m.content}
               </div>
             </div>
           ) : (
-            <div key={i} className="flex justify-start">
-              <div className="max-w-[92%] rounded-2xl rounded-bl-sm border border-[var(--color-border)] bg-[var(--color-panel)] px-3.5 py-2.5 w-full">
+            <div key={i} className="flex min-w-0 justify-start">
+              <div className="max-w-[92%] min-w-0 rounded-2xl rounded-bl-sm border border-[var(--color-border)] bg-[var(--color-panel)] px-3.5 py-2.5 w-full">
                 {m.parts && m.parts.length > 0 ? (
                   <AssistantBubble
                     parts={m.parts}
@@ -543,7 +543,7 @@ export default function ChatPanel({ serverId }: { serverId: string }) {
       {/* Composer */}
       <div className="mt-3 flex items-end gap-2">
         <textarea
-          className="input resize-none"
+          className="input flex-1 resize-none"
           rows={2}
           value={input}
           onChange={(e) => setInput(e.target.value)}

@@ -15,7 +15,7 @@ const TABS = [
 export default function ChatTabs() {
   const path = usePathname();
   return (
-    <div className="flex items-center gap-1 overflow-x-auto border-b border-[var(--color-border)]">
+    <div className="flex flex-nowrap items-center gap-1 overflow-x-auto whitespace-nowrap border-b border-[var(--color-border)] [-ms-overflow-style:none] [scrollbar-width:none]">
       <h1 className="mr-4 flex-none text-lg font-semibold">Chat AI</h1>
       {TABS.map((t) => {
         const active = t.href === "/chat" ? path === "/chat" : path.startsWith(t.href);

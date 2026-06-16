@@ -206,7 +206,14 @@ body {
     line-height: 1.65;
     color: var(--color-fg);
     word-break: break-word;
+    overflow-wrap: anywhere;
+    max-width: 100%;
+    min-width: 0;
   }
+  /* Long links/inline code must wrap instead of widening the bubble. */
+  .md-body a { overflow-wrap: anywhere; word-break: break-word; }
+  /* Images stay within the bubble. */
+  .md-body img { max-width: 100%; height: auto; border-radius: 8px; }
   .md-body > :first-child { margin-top: 0; }
   .md-body > :last-child { margin-bottom: 0; }
   .md-body p { margin: 0.5rem 0; }
@@ -254,6 +261,7 @@ body {
     border-radius: 10px;
     padding: 0.85rem 1rem;
     overflow-x: auto;
+    max-width: 100%;
     margin: 0.7rem 0;
   }
   .md-body pre code {

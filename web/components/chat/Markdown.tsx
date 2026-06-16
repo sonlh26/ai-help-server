@@ -13,7 +13,7 @@ import "katex/dist/katex.min.css";
  */
 export default function Markdown({ children }: { children: string }) {
   return (
-    <div className="md-body">
+    <div className="md-body min-w-0 max-w-full">
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkMath]}
         rehypePlugins={[rehypeKatex]}

@@ -53,6 +53,7 @@ const NOTIFY_DEFAULT: NotifyCfg = {
 /* AI assistant card (admin only) ------------------------------------------- */
 function AiCard({ onSaved }: { onSaved: () => void }) {
   const [provider, setProvider] = useState("openai");
+  const [baseUrl, setBaseUrl] = useState("");
   const [model, setModel] = useState("");
   const [temperature, setTemperature] = useState(0.2);
   const [apiKey, setApiKey] = useState("");
@@ -69,6 +70,7 @@ function AiCard({ onSaved }: { onSaved: () => void }) {
       .then((d: SettingsResp | null) => {
         const llm = d?.llm ?? {};
         if (llm.provider) setProvider(llm.provider);
+        if (llm.base_url) setBaseUrl(llm.base_url);
         if (llm.model) setModel(llm.model);
         if (typeof llm.temperature === "number") setTemperature(llm.temperature);
         setKeySet(!!llm.api_key_set);
@@ -80,7 +82,7 @@ function AiCard({ onSaved }: { onSaved: () => void }) {
   async function save() {
     setSaving(true);
     try {
-      const llm: Record<string, unknown> = { provider, model, temperature };
+      const llm: Record<string, unknown> = { provider, base_url: baseUrl.trim(), model, temperature };
       if (apiKey.trim()) llm.api_key = apiKey.trim();
       const res = await fetch("/api/admin/settings", {
         method: "PUT",
@@ -146,6 +148,20 @@ function AiCard({ onSaved }: { onSaved: () => void }) {
               onChange={(e) => setModel(e.target.value)}
               placeholder="gpt-4o-mini / claude-3-5-sonnet"
             />
+          </div>
+
+          <div className="sm:col-span-2">
+            <label className="label">Base URL</label>
+            <input
+              className="input"
+              value={baseUrl}
+              onChange={(e) => setBaseUrl(e.target.value)}
+              placeholder="https://api.openai.com/v1 (hoặc gateway OpenAI-compatible của bạn)"
+            />
+            <p className="mt-1 text-xs text-[var(--color-muted)]">
+              Endpoint của provider. OpenAI: <code>https://api.openai.com/v1</code> · Anthropic:{" "}
+              <code>https://api.anthropic.com/v1</code> · hoặc URL gateway tự host.
+            </p>
           </div>
 
           <div className="sm:col-span-2">

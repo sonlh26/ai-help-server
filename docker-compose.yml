@@ -1,29 +1,38 @@
-# Hybrid stack: web (Next.js) + api (FastAPI) + db (Postgres) + worker (monitoring).
-# Deploy self-hosted: `docker compose up -d`. web is the only public-facing service.
+# Hybrid stack: web (Next.js) + api (FastAPI) + worker (monitoring) + gateway (agent bridge).
+#
+# DATABASE: by default this expects an EXTERNAL PostgreSQL (set DATABASE_URL in .env).
+#   - Managed/another host:   DATABASE_URL=postgresql://user:pass@db-host:5432/aihelp
+#   - Postgres ON THIS HOST:  DATABASE_URL=postgresql://user:pass@host.docker.internal:5432/aihelp
+#     (containers reach the host via host.docker.internal — wired below via extra_hosts.
+#      Make Postgres listen on the docker bridge + allow it in pg_hba.conf.)
+#
+# Want the bundled Postgres container instead? Start with the profile:
+#   docker compose --profile bundled-db up -d --build
+# and point DATABASE_URL at host "db" (postgresql://...@db:5432/...).
 services:
   db:
     image: postgres:16-alpine
     restart: unless-stopped
+    profiles: ["bundled-db"]   # only starts with: docker compose --profile bundled-db up
+    # Defaults tránh cảnh báo "variable not set" khi chạy chế độ DB ngoài (service này không khởi động).
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER:-aihelp}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aihelp}
+      POSTGRES_DB: ${POSTGRES_DB:-aihelp}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-aihelp} -d ${POSTGRES_DB:-aihelp}"]
       interval: 10s
       timeout: 5s
       retries: 5
-    # Không expose ra ngoài; chỉ mạng nội bộ compose.
 
   api:
     build: ./api
     restart: unless-stopped
     env_file: .env
-    depends_on:
-      db:
-        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # reach a Postgres running on the host
     # Không expose port ra host; web gọi qua mạng nội bộ (http://api:8000).
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
@@ -31,9 +40,8 @@ services:
     build: ./api
     restart: unless-stopped
     env_file: .env
-    depends_on:
-      db:
-        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     # Chạy vòng lặp giám sát (always-on, dùng APP_MASTER_KEY giải mã creds).
     command: ["python", "-m", "app.worker"]
 
@@ -41,11 +49,12 @@ services:
     build: ./web
     restart: unless-stopped
     env_file: .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - api
-      - db
     ports:
-      - "3001:3000"
+      - "${WEB_PORT:-3001}:3000"
 
   # Agent gateway: bridges the API to on-server agents (long-poll). Public-facing so
   # agents can dial out to it; the API dispatches jobs via the internal network.
@@ -54,7 +63,7 @@ services:
     restart: unless-stopped
     env_file: .env
     ports:
-      - "8090:8090"
+      - "${GATEWAY_PORT:-8090}:8090"
 
 volumes:
   pgdata:

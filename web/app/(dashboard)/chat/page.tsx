@@ -173,12 +173,12 @@ function AiAvatar() {
 function Disclosure({ header, children, defaultOpen = false }: { header: ReactNode; children: ReactNode; defaultOpen?: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="rounded-lg border border-[var(--color-border-soft)] bg-[#0e1412]">
-      <button onClick={() => setOpen((o) => !o)} className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs">
+    <div className="min-w-0 max-w-full overflow-hidden rounded-lg border border-[var(--color-border-soft)] bg-[#0e1412]">
+      <button onClick={() => setOpen((o) => !o)} className="flex w-full min-w-0 items-center gap-2 px-3 py-2 text-left text-xs">
         {header}
         <IconChevron className={`ml-auto h-3.5 w-3.5 flex-none text-[var(--color-faint)] transition-transform ${open ? "" : "-rotate-90"}`} />
       </button>
-      {open && <div className="border-t border-[var(--color-border-soft)]">{children}</div>}
+      {open && <div className="min-w-0 max-w-full overflow-hidden border-t border-[var(--color-border-soft)]">{children}</div>}
     </div>
   );
 }
@@ -193,10 +193,10 @@ function DiskAnalysisCard({ da, durationMs }: { da: DiskAnalysis; durationMs?: n
   const pct = da.summary?.used_percent ?? 0;
   const ring = pct >= 90 ? "var(--color-danger)" : pct >= 70 ? "var(--color-warn)" : "var(--color-accent)";
   return (
-    <div className="rounded-lg border border-[var(--color-border-soft)] bg-[#0e1412]">
+    <div className="min-w-0 max-w-full overflow-hidden rounded-lg border border-[var(--color-border-soft)] bg-[#0e1412]">
       <div className="flex items-center gap-2 px-3 py-2 text-xs">
         <span className="dot text-[var(--color-accent)]" />
-        <span className="truncate font-[family-name:var(--font-mono)] text-[var(--color-fg)]">analyze_disk_usage</span>
+        <span className="min-w-0 truncate font-[family-name:var(--font-mono)] text-[var(--color-fg)]">analyze_disk_usage</span>
         <span className="flex-none text-[var(--color-accent)]">✓ Completed</span>
         <span className="ml-auto flex flex-none items-center gap-3 text-[var(--color-faint)]">
           {durationMs != null && <span>Thời gian: {(durationMs / 1000).toFixed(2)}s</span>}
@@ -312,12 +312,12 @@ function ConfirmCard({
   onPick: (mode: "once" | "always" | "no") => void;
 }) {
   return (
-    <div className="rounded-xl border border-[rgba(240,180,41,0.35)] bg-[var(--color-warn-soft)] p-4">
+    <div className="min-w-0 max-w-full overflow-hidden rounded-xl border border-[rgba(240,180,41,0.35)] bg-[var(--color-warn-soft)] p-4">
       <div className="flex items-center gap-2 text-sm font-semibold text-[var(--color-warn)]">⚠ Cần xác nhận</div>
-      <div className="mt-1 text-sm text-[var(--color-fg)] font-[family-name:var(--font-mono)]">{part.name}</div>
-      <div className="mt-0.5 text-xs text-[var(--color-muted)]">{part.reason}</div>
+      <div className="mt-1 break-words text-sm text-[var(--color-fg)] font-[family-name:var(--font-mono)]">{part.name}</div>
+      <div className="mt-0.5 break-words text-xs text-[var(--color-muted)]">{part.reason}</div>
       {Object.keys(part.args).length > 0 && (
-        <pre className="mt-2 overflow-x-auto rounded-md border border-[var(--color-border-soft)] bg-[#0e1412] p-2 font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-muted)]">
+        <pre className="mt-2 max-w-full overflow-x-auto whitespace-pre-wrap break-words rounded-md border border-[var(--color-border-soft)] bg-[#0e1412] p-2 font-[family-name:var(--font-mono)] text-[11px] text-[var(--color-muted)]">
           {stringify(part.args)}
         </pre>
       )}
@@ -369,17 +369,17 @@ function PartView({ part, streaming, isLastPart }: { part: Part; streaming: bool
           </span>
         }
       >
-        <p className="whitespace-pre-wrap px-3 py-2.5 text-xs leading-relaxed text-[var(--color-muted)]">{part.text}</p>
+        <p className="whitespace-pre-wrap break-words px-3 py-2.5 text-xs leading-relaxed text-[var(--color-muted)]">{part.text}</p>
       </Disclosure>
     );
   }
   if (part.kind === "tool_call") {
     return (
-      <div className="rounded-lg border border-[var(--color-border-soft)] bg-[#0e1412]">
+      <div className="min-w-0 max-w-full overflow-hidden rounded-lg border border-[var(--color-border-soft)] bg-[#0e1412]">
         <div className="flex items-center gap-2 px-3 py-2 text-xs">
           <span className="dot text-[var(--color-accent)]" />
-          <span className="font-semibold text-[var(--color-muted)]">Tool call</span>
-          <span className="truncate font-[family-name:var(--font-mono)] text-[var(--color-fg)]">{part.name}</span>
+          <span className="flex-none font-semibold text-[var(--color-muted)]">Tool call</span>
+          <span className="min-w-0 truncate font-[family-name:var(--font-mono)] text-[var(--color-fg)]">{part.name}</span>
           {part.running && (
             <span className="ml-auto flex flex-none items-center gap-1.5 text-[var(--color-warn)]">
               <span className="dot pulse" /> Running…
@@ -388,7 +388,7 @@ function PartView({ part, streaming, isLastPart }: { part: Part; streaming: bool
         </div>
         <div className="border-t border-[var(--color-border-soft)] px-3 py-2.5">
           <div className="mb-1 text-xs text-[var(--color-muted)]">Parameters</div>
-          <pre className="overflow-x-auto whitespace-pre-wrap break-words font-[family-name:var(--font-mono)] text-[11px] leading-relaxed text-[var(--color-fg)]">{stringify(part.args)}</pre>
+          <pre className="max-w-full overflow-x-auto whitespace-pre-wrap break-words font-[family-name:var(--font-mono)] text-[11px] leading-relaxed text-[var(--color-fg)]">{stringify(part.args)}</pre>
         </div>
       </div>
     );
@@ -396,16 +396,16 @@ function PartView({ part, streaming, isLastPart }: { part: Part; streaming: bool
   const da = asDiskAnalysis(part.result);
   if (da) return <DiskAnalysisCard da={da} durationMs={part.durationMs} />;
   return (
-    <div className="rounded-lg border border-[var(--color-border-soft)] bg-[#0e1412]">
+    <div className="min-w-0 max-w-full overflow-hidden rounded-lg border border-[var(--color-border-soft)] bg-[#0e1412]">
       <div className="flex items-center gap-2 px-3 py-2 text-xs">
         <span className="dot text-[var(--color-accent)]" />
-        <span className="truncate font-[family-name:var(--font-mono)] text-[var(--color-fg)]">{part.name}</span>
+        <span className="min-w-0 truncate font-[family-name:var(--font-mono)] text-[var(--color-fg)]">{part.name}</span>
         <span className="flex-none text-[var(--color-accent)]">✓ Completed</span>
         {part.durationMs != null && <span className="ml-auto flex-none text-[var(--color-faint)]">Thời gian: {(part.durationMs / 1000).toFixed(2)}s</span>}
       </div>
       <div className="border-t border-[var(--color-border-soft)]">
         <Disclosure header={<span className="font-semibold text-[var(--color-muted)]">Kết quả</span>}>
-          <pre className="max-h-72 overflow-auto whitespace-pre-wrap break-words px-3 py-2.5 font-[family-name:var(--font-mono)] text-[11px] leading-relaxed text-[var(--color-muted)]">{part.result}</pre>
+          <pre className="max-h-72 max-w-full overflow-auto whitespace-pre-wrap break-words px-3 py-2.5 font-[family-name:var(--font-mono)] text-[11px] leading-relaxed text-[var(--color-muted)]">{part.result}</pre>
         </Disclosure>
       </div>
     </div>
@@ -427,7 +427,7 @@ function ServerSelect({ servers, value, onChange }: { servers: ServerRow[]; valu
   }, [open]);
   return (
     <div className="relative" ref={ref}>
-      <button onClick={() => setOpen((o) => !o)} className="flex min-w-[220px] items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-panel)] px-3 py-1.5 text-sm transition-colors hover:border-[#2f3f37]">
+      <button onClick={() => setOpen((o) => !o)} className="flex w-full min-w-0 items-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-panel)] px-3 py-1.5 text-sm transition-colors hover:border-[#2f3f37] sm:w-auto sm:min-w-[220px]">
         <span className="dot text-[var(--color-accent)]" />
         <span className="min-w-0">
           <span className="block truncate font-medium">{cur?.name ?? "Chọn server"}</span>
@@ -478,6 +478,7 @@ function ChatContent() {
   const [streaming, setStreaming] = useState(false);
   const [error, setError] = useState("");
   const [model, setModel] = useState("");
+  const [histOpen, setHistOpen] = useState(false); // mobile history drawer
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const loadList = useCallback(() => {
@@ -760,14 +761,56 @@ function ChatContent() {
 
   const empty = messages.length === 0;
 
+  // Shared history list (used by desktop sidebar + mobile drawer).
+  const historyList = (
+    <>
+      {convList.length === 0 && <div className="px-3 py-6 text-center text-xs text-[var(--color-faint)]">Chưa có hội thoại nào được lưu.</div>}
+      {convList.map((c) => (
+        <div
+          key={c.id}
+          className={`group flex items-center gap-2 rounded-lg px-2.5 py-2 transition-colors ${
+            c.id === convId ? "bg-[var(--color-accent-soft)]" : "hover:bg-[var(--color-panel-2)]"
+          }`}
+        >
+          <button
+            onClick={() => {
+              selectConv(c.id);
+              setHistOpen(false);
+            }}
+            className="min-w-0 flex-1 text-left"
+          >
+            <div className={`truncate text-sm ${c.id === convId ? "text-[var(--color-fg)]" : "text-[var(--color-muted)]"}`}>{c.title}</div>
+            <div className="mt-0.5 truncate text-[11px] text-[var(--color-faint)]">{fmtWhen(c.updatedAt)}</div>
+          </button>
+          <button onClick={() => deleteConv(c.id)} disabled={streaming} className="grid h-9 w-9 flex-none place-items-center rounded-md text-[var(--color-faint)] transition-opacity hover:text-[var(--color-danger)] disabled:opacity-0 lg:h-7 lg:w-7 lg:opacity-0 lg:group-hover:opacity-100" aria-label="Xóa hội thoại">
+            <IconTrash className="h-4 w-4" />
+          </button>
+        </div>
+      ))}
+    </>
+  );
+
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-[var(--color-muted)]">Server</span>
-          <ServerSelect servers={servers} value={serverId} onChange={setServerId} />
+        <div className="flex w-full min-w-0 items-center gap-2 sm:w-auto">
+          <span className="flex-none text-xs font-medium text-[var(--color-muted)]">Server</span>
+          <div className="min-w-0 flex-1 sm:flex-none">
+            <ServerSelect servers={servers} value={serverId} onChange={setServerId} />
+          </div>
           <ApprovalsButton serverId={serverId} />
+          <button
+            onClick={() => setHistOpen(true)}
+            className="ml-auto flex flex-none items-center gap-1.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-panel)] px-3 py-1.5 text-xs font-medium text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)] lg:hidden"
+            aria-label="Mở lịch sử chat"
+          >
+            <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-7 3.4M3 4v3.4h3.4" />
+              <path d="M12 7v5l3 2" />
+            </svg>
+            Lịch sử
+          </button>
         </div>
         {sortedSkills.length > 0 && (
           <div className="flex flex-wrap items-center gap-2">
@@ -793,7 +836,7 @@ function ChatContent() {
 
       {/* Main: history + chat */}
       <div className="mt-4 grid min-h-0 flex-1 grid-cols-1 gap-4 lg:grid-cols-[280px_1fr]">
-        {/* History sidebar (left) */}
+        {/* History sidebar (left) — desktop only */}
         <aside className="hidden min-h-0 flex-col rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] lg:flex">
           <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-3">
             <h3 className="text-sm font-semibold">Lịch sử chat</h3>
@@ -801,30 +844,41 @@ function ChatContent() {
               <IconPlus className="h-4 w-4" />
             </button>
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto p-2">
-            {convList.length === 0 && <div className="px-3 py-6 text-center text-xs text-[var(--color-faint)]">Chưa có hội thoại nào được lưu.</div>}
-            {convList.map((c) => (
-              <div
-                key={c.id}
-                className={`group flex items-center gap-2 rounded-lg px-2.5 py-2 transition-colors ${
-                  c.id === convId ? "bg-[var(--color-accent-soft)]" : "hover:bg-[var(--color-panel-2)]"
-                }`}
-              >
-                <button onClick={() => selectConv(c.id)} className="min-w-0 flex-1 text-left">
-                  <div className={`truncate text-sm ${c.id === convId ? "text-[var(--color-fg)]" : "text-[var(--color-muted)]"}`}>{c.title}</div>
-                  <div className="mt-0.5 truncate text-[11px] text-[var(--color-faint)]">{fmtWhen(c.updatedAt)}</div>
-                </button>
-                <button onClick={() => deleteConv(c.id)} disabled={streaming} className="grid h-7 w-7 flex-none place-items-center rounded-md text-[var(--color-faint)] opacity-0 transition-opacity hover:text-[var(--color-danger)] group-hover:opacity-100 disabled:opacity-0" aria-label="Xóa hội thoại">
-                  <IconTrash className="h-4 w-4" />
-                </button>
-              </div>
-            ))}
-          </div>
+          <div className="min-h-0 flex-1 overflow-y-auto p-2">{historyList}</div>
         </aside>
+
+        {/* History drawer — mobile only */}
+        {histOpen && (
+          <div className="fixed inset-0 z-40 lg:hidden" role="dialog" aria-modal="true" aria-label="Lịch sử chat">
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setHistOpen(false)} />
+            <div className="absolute inset-y-0 left-0 flex w-[85%] max-w-[320px] flex-col border-r border-[var(--color-border)] bg-[var(--color-panel)] shadow-xl">
+              <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-3">
+                <h3 className="text-sm font-semibold">Lịch sử chat</h3>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      newChat();
+                      setHistOpen(false);
+                    }}
+                    disabled={streaming}
+                    className="grid h-9 w-9 place-items-center rounded-lg border border-[var(--color-border)] text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)] disabled:opacity-50"
+                    aria-label="Hội thoại mới"
+                  >
+                    <IconPlus className="h-4 w-4" />
+                  </button>
+                  <button onClick={() => setHistOpen(false)} className="grid h-9 w-9 place-items-center rounded-lg border border-[var(--color-border)] text-[var(--color-muted)] transition-colors hover:text-[var(--color-fg)]" aria-label="Đóng">
+                    ✕
+                  </button>
+                </div>
+              </div>
+              <div className="min-h-0 flex-1 overflow-y-auto p-2">{historyList}</div>
+            </div>
+          </div>
+        )}
 
         {/* Chat column */}
         <div className="flex min-h-0 flex-col">
-          <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto rounded-xl border border-[var(--color-border)] bg-[#0c100f] p-5">
+          <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden rounded-xl border border-[var(--color-border)] bg-[#0c100f] p-3 sm:p-5">
             {empty ? (
               <div className="flex h-full flex-col items-center justify-center px-4 text-center">
                 <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Mình có thể giúp gì cho bạn?</h2>
@@ -850,7 +904,7 @@ function ChatContent() {
                       <div key={i} className="flex flex-col items-end gap-1.5">
                         <span className="text-xs text-[var(--color-faint)]">Hôm nay {m.time}</span>
                         <div className="flex items-start gap-2.5">
-                          <div className="max-w-[80%] whitespace-pre-wrap rounded-2xl rounded-br-sm border border-[rgba(33,208,122,0.25)] bg-[var(--color-accent-soft)] px-4 py-2.5 text-sm leading-relaxed">{m.content}</div>
+                          <div className="max-w-[80%] min-w-0 whitespace-pre-wrap break-words rounded-2xl rounded-br-sm border border-[rgba(33,208,122,0.25)] bg-[var(--color-accent-soft)] px-4 py-2.5 text-sm leading-relaxed">{m.content}</div>
                           <span className="grid h-8 w-8 flex-none place-items-center rounded-full bg-[var(--color-panel-2)] text-xs font-bold text-[var(--color-muted)]">AD</span>
                         </div>
                       </div>
@@ -860,7 +914,7 @@ function ChatContent() {
                   return (
                     <div key={i} className="flex items-start gap-2.5">
                       <AiAvatar />
-                      <div className="min-w-0 flex-1 space-y-3">
+                      <div className="min-w-0 max-w-full flex-1 space-y-3 lg:max-w-3xl">
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-semibold">AI Assistant</span>
                           <span className="text-xs text-[var(--color-faint)]">Hôm nay {m.time}</span>
@@ -927,7 +981,7 @@ function ChatContent() {
           {/* Composer */}
           <div className="mt-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] px-3 py-2.5">
             <div className="flex items-end gap-2">
-              <button className="grid h-9 w-9 flex-none place-items-center rounded-lg text-[var(--color-faint)] transition-colors hover:text-[var(--color-fg)] disabled:opacity-50" aria-label="Đính kèm" disabled>
+              <button className="grid h-11 w-11 flex-none place-items-center rounded-lg text-[var(--color-faint)] transition-colors hover:text-[var(--color-fg)] disabled:opacity-50 sm:h-9 sm:w-9" aria-label="Đính kèm" disabled>
                 <IconPaperclip className="h-[18px] w-[18px]" />
               </button>
               <textarea
@@ -943,17 +997,17 @@ function ChatContent() {
               <button
                 onClick={() => send(input)}
                 disabled={streaming || !input.trim()}
-                className="grid h-9 w-9 flex-none place-items-center rounded-lg bg-[var(--color-accent)] text-[#07140d] transition-colors hover:bg-[var(--color-accent-strong)] disabled:opacity-50"
+                className="grid h-11 w-11 flex-none place-items-center rounded-lg bg-[var(--color-accent)] text-[#07140d] transition-colors hover:bg-[var(--color-accent-strong)] disabled:opacity-50 sm:h-9 sm:w-9"
                 aria-label="Gửi"
               >
                 <IconSend className="h-[18px] w-[18px]" />
               </button>
             </div>
-            <div className="mt-1.5 flex items-center gap-1.5 border-t border-[var(--color-border-soft)] pt-1.5 text-xs text-[var(--color-muted)]">
-              <IconSparkle className="h-3.5 w-3.5 text-[var(--color-accent)]" />
-              <span className="font-medium">{model || "Model mặc định"}</span>
-              <span className="text-[var(--color-faint)]">· Chế độ thông minh (dùng công cụ)</span>
-              <Link href="/chat/models" className="ml-auto text-[var(--color-accent)] hover:underline">Đổi model</Link>
+            <div className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-1 border-t border-[var(--color-border-soft)] pt-1.5 text-xs text-[var(--color-muted)]">
+              <IconSparkle className="h-3.5 w-3.5 flex-none text-[var(--color-accent)]" />
+              <span className="min-w-0 truncate font-medium">{model || "Model mặc định"}</span>
+              <span className="hidden text-[var(--color-faint)] sm:inline">· Chế độ thông minh (dùng công cụ)</span>
+              <Link href="/chat/models" className="ml-auto flex-none text-[var(--color-accent)] hover:underline">Đổi model</Link>
             </div>
           </div>
 
