@@ -835,7 +835,7 @@ function ChatContent() {
       </div>
 
       {/* Main: history + chat */}
-      <div className="mt-4 grid min-h-0 flex-1 grid-cols-1 gap-4 lg:grid-cols-[280px_1fr]">
+      <div className="mt-4 grid min-h-0 min-w-0 flex-1 grid-cols-1 gap-4 lg:grid-cols-[280px_1fr]">
         {/* History sidebar (left) — desktop only */}
         <aside className="hidden min-h-0 flex-col rounded-xl border border-[var(--color-border)] bg-[var(--color-panel)] lg:flex">
           <div className="flex items-center justify-between border-b border-[var(--color-border)] px-4 py-3">
@@ -877,7 +877,7 @@ function ChatContent() {
         )}
 
         {/* Chat column */}
-        <div className="flex min-h-0 flex-col">
+        <div className="flex min-h-0 min-w-0 flex-col">
           <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden rounded-xl border border-[var(--color-border)] bg-[#0c100f] p-3 sm:p-5">
             {empty ? (
               <div className="flex h-full flex-col items-center justify-center px-4 text-center">

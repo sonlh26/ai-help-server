@@ -3,9 +3,9 @@
 # Chạy TRONG thư mục agent/ (nơi có main.go). Idempotent: chạy lại để cập nhật token/url.
 #
 # Dùng (lấy GATEWAY_URL + AGENT_TOKEN từ UI: Server → Local Agent → lệnh cài):
-#   sudo GATEWAY_URL=https://cp.5steam.com:8091 AGENT_TOKEN=xxxx bash install.sh
+#   sudo GATEWAY_URL=https://gw.example.com:8090 AGENT_TOKEN=xxxx bash install.sh
 # hoặc:
-#   sudo bash install.sh --gateway https://cp.5steam.com:8091 --token xxxx
+#   sudo bash install.sh --gateway https://gw.example.com:8090 --token xxxx
 set -euo pipefail
 
 GO_VERSION="1.23.4"
@@ -23,7 +23,7 @@ while [ $# -gt 0 ]; do
     *) echo "Tham số lạ: $1"; exit 1;;
   esac
 done
-[ -z "$GATEWAY_URL" ] && read -rp "GATEWAY_URL (vd https://cp.5steam.com:8091): " GATEWAY_URL
+[ -z "$GATEWAY_URL" ] && read -rp "GATEWAY_URL (vd https://gw.example.com:8090): " GATEWAY_URL
 [ -z "$AGENT_TOKEN" ] && read -rp "AGENT_TOKEN (lấy ở UI): " AGENT_TOKEN
 [ -z "$GATEWAY_URL" ] || [ -z "$AGENT_TOKEN" ] && { echo "❌ Thiếu GATEWAY_URL hoặc AGENT_TOKEN."; exit 1; }
 [ "$(id -u)" = 0 ] || { echo "❌ Cần chạy bằng root (sudo)."; exit 1; }
